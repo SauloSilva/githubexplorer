@@ -11,8 +11,8 @@ import {
   Button,
 } from 'react-native';
 
-import './config/ReactotronConfig';
-import './config/DevToolsConfig';
+import 'config/ReactotronConfig';
+import 'config/DevToolsConfig';
 import Todo from './components/Todo';
 
 const color = '#F5FCFF';
