@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { NavigationActions } from 'react-navigation';
 import PropTypes from 'prop-types';
 
+import api from 'services/api';
+
 import {
   View,
   Text,
@@ -23,15 +25,34 @@ export default class Welcome extends Component {
     }).isRequired,
   }
 
-  signIn = () => {
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [
-        NavigationActions.navigate({ routeName: 'User' }),
-      ],
-    });
+  state = {
+    username: '',
+  }
 
-    this.props.navigation.dispatch(resetAction);
+  checkUserExists = async (username) => {
+    const user = await api.get(`/users/${username}`);
+    return user;
+  }
+
+  signIn = async () => {
+    const { username } = this.state;
+
+    if (username.length === 0) return;
+
+    try {
+      await this.checkUserExists(username);
+
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({ routeName: 'User' }),
+        ],
+      });
+
+      this.props.navigation.dispatch(resetAction);
+    } catch (err) {
+      console.tron.log(err);
+    }
   }
 
   render() {
@@ -51,6 +72,8 @@ export default class Welcome extends Component {
             style={styles.input}
             placeholder="Digite seu usuário"
             underlineColorAndroid="rgba(0,0,0,0)"
+            value={this.state.username}
+            onChangeText={username => this.setState({ username })}
           />
 
           <TouchableOpacity style={styles.button} onPress={this.signIn}>
