@@ -34,9 +34,7 @@ export default class Repositories extends Component {
     this.setState({ data: response.data, loading: false });
   }
 
-  renderListItem = ({ item }) => (
-    <RepositoryItem repository={item} />
-  );
+  renderListItem = ({ item }) => <RepositoryItem repository={item} />;
 
   renderList = () => (
     <FlatList
