@@ -5,11 +5,12 @@ import {
   AsyncStorage,
   ActivityIndicator,
   FlatList,
-  Text,
 } from 'react-native';
 
 import api from 'services/api';
 import styles from './styles';
+
+import RepositoryItem from './components/RepositoryItem';
 
 export default class Repositories extends Component {
   static navigationOptions = {
@@ -30,12 +31,11 @@ export default class Repositories extends Component {
     const username = await AsyncStorage.getItem('@Githuber:username');
     const response = await api.get(`/users/${username}/repos`);
 
-    console.tron.log(response);
     this.setState({ data: response.data, loading: false });
   }
 
   renderListItem = ({ item }) => (
-    <Text>{item.full_name}</Text>
+    <RepositoryItem repository={item} />
   );
 
   renderList = () => (
@@ -48,7 +48,7 @@ export default class Repositories extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         {
           this.state.loading
             ? <ActivityIndicator style={styles.loading} />
