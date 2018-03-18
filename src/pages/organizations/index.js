@@ -6,7 +6,7 @@ import { View, AsyncStorage, FlatList, ActivityIndicator } from 'react-native';
 
 import api from 'services/api';
 import styles from './styles';
-import OrganizationItem from './components/OrganizationItem'
+import OrganizationItem from './components/OrganizationItem';
 
 export default class Organizations extends Component {
   static navigationOptions = {
@@ -17,6 +17,7 @@ export default class Organizations extends Component {
   state = {
     data: [],
     loading: true,
+    refreshing: false,
   }
 
   componentDidMount() {
@@ -24,10 +25,12 @@ export default class Organizations extends Component {
   }
 
   loadOrganizations = async () => {
+    this.setState({ refreshing: true });
+
     const username = await AsyncStorage.getItem('@Githuber:username');
     const response = await api.get(`/users/${username}/orgs`);
 
-    this.setState({ data: response.data, loading: false });
+    this.setState({ refreshing: false, data: response.data, loading: false });
   }
 
   renderListItem = ({ item }) => <OrganizationItem organization={item} />;
@@ -39,6 +42,8 @@ export default class Organizations extends Component {
       renderItem={this.renderListItem}
       numColumns={2}
       columnWrapperStyle={styles.columnContainer}
+      onRefresh={this.loadOrganizations}
+      refreshing={this.state.refreshing}
     />
   );
 

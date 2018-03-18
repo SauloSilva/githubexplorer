@@ -10,7 +10,7 @@ const OrganizationItem = ({ organization }) => (
   </View>
 );
 
-OrganizationItem.proptype = {
+OrganizationItem.propTypes = {
   organization: PropType.shape({
     avatar_url: PropType.string,
     login: PropType.string,
